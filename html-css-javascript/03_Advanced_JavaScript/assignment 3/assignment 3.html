@@ -1,0 +1,81 @@
+<!doctype html>
+<html>
+    <head>
+        <title>Matching Game</title>
+        <meta name="author" content="Chao Meng">
+        <style>
+            img {position:absolute} 
+            div {
+                position:absolute;
+                width:500px;
+                height:500px
+            }
+            #rightSide {left: 500px; 
+                        border-left: 1px solid black}
+        </style>
+    </head>
+    <body onload="generateFaces()">
+        <h1>Matching Game</h1>
+        <p>Click on the extra smiling face on the left.</p>
+        <div id="leftSide"></div>
+        <div id="rightSide"></div>
+
+        <script>
+            var numberOfFaces = 5;
+            var theLeftSide = document.getElementById("leftSide");
+            var theRightSide = document.getElementById("rightSide");
+            var theBody = document.getElementsByTagName("body")[0];
+
+            var imgSize = 100;
+            var divSize = 500;
+
+            function generateFaces() {
+                clearScreen();
+                createLeftSideFaces();
+                copyToRightSideExceptLast();
+                setGameFinish();
+            }
+
+            function clearScreen() {
+                while(theLeftSide.firstChild) {
+                    theLeftSide.removeChild(theLeftSide.firstChild);
+                }
+                while(theRightSide.firstChild) {
+                    theRightSide.removeChild(theRightSide.firstChild);
+                }
+            }
+
+            function createLeftSideFaces() {
+                for (var i = 1; i <= numberOfFaces; ++i) {
+                    var img = document.createElement("img");
+                    img.src="https://home.cse.ust.hk/~rossiter/mooc/matching_game/smile.png";
+                    img.style.top = Math.random() * (divSize - imgSize) + "px";
+                    img.style.left = Math.random() * (divSize - imgSize) + "px";
+                    theLeftSide.appendChild(img);
+                }
+            }
+
+            function copyToRightSideExceptLast() {
+                var leftSideImages = theLeftSide.cloneNode(true);
+                leftSideImages.removeChild(leftSideImages.lastChild);
+                rightSide.appendChild(leftSideImages);
+            }
+
+            function setGameFinish() {
+                theLeftSide.lastChild.onclick=
+                    function nextLevel(event){
+                        event.stopPropagation();
+                        numberOfFaces += 5;
+                        generateFaces();
+                };
+
+                theBody.onclick = function gameOver() {
+                    alert("Game Over!");
+                    theBody.onclick = null;
+                    theLeftSide.lastChild.onclick = null;
+                }; 
+            }
+        </script>
+    </body>
+</html>
+
